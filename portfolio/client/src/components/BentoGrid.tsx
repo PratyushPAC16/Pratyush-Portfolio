@@ -335,17 +335,15 @@ const RELATIONSHIPS: Record<string, string[]> = {
   "Admin Dashboard": ["Express API", "Auth Service (JWT)"],
   "Express API": [
     "Portfolio UI", "Lab Console", "Admin Dashboard", "Auth Service (JWT)",
-    "Contact Service (Email)", "Analytics Logger", "MongoDB Atlas",
-    "Render (Backend)", "GitHub API", "IoT Devices (MQTT)"
+    "Contact Service (Email)", "Analytics Logger", "Blog Service", "MongoDB Atlas",
+    "Render (Backend)"
   ],
   "Auth Service (JWT)": ["Express API", "Admin Dashboard"],
   "Contact Service (Email)": ["Express API", "Email Provider (SMTP)"],
+  "Blog Service": ["Express API", "MongoDB Atlas"],
   "Analytics Logger": ["Express API", "MongoDB Atlas"],
-  "MongoDB Atlas": ["Express API", "Analytics Logger"],
-  "Redis Cache": ["Express API"],
-  "IoT Devices (MQTT)": ["Express API"],
+  "MongoDB Atlas": ["Express API", "Analytics Logger", "Blog Service"],
   "Email Provider (SMTP)": ["Contact Service (Email)"],
-  "GitHub API": ["Express API"],
   "Vercel (Frontend)": ["Portfolio UI"],
   "Render (Backend)": ["Express API"],
 };
@@ -516,18 +514,24 @@ function SystemTopologyCard() {
                 type="backend"
                 desc="Core backend API server built with Node.js and Express. Handles API routing, rate limiting, and database queries. Hosted on Render."
               />
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <Node
                   name="Auth Service (JWT)"
                   sub="Session guardian"
                   type="backend"
-                  desc="Secures admin routes using JSON Web Tokens (JWT) stored in secure HTTP-only cookies."
+                  desc="Secures admin routes using JSON Web Tokens (JWT) for protected portfolio management."
                 />
                 <Node
                   name="Contact Service (Email)"
                   sub="Form dispatcher"
                   type="backend"
                   desc="Processes messages sent from the contact form and dispatches them via SMTP (Nodemailer)."
+                />
+                <Node
+                  name="Blog Service"
+                  sub="Posts CRUD"
+                  type="backend"
+                  desc="Manages blog posts with full CRUD operations, slug-based routing, and tag categorization."
                 />
                 <Node
                   name="Analytics Logger"
@@ -544,18 +548,12 @@ function SystemTopologyCard() {
           {/* Data Layer */}
           <div className="border border-emerald-500/10 bg-emerald-500/[0.01] p-3.5 rounded-2xl">
             <div className="text-[9px] font-mono text-emerald-500/80 uppercase tracking-widest mb-2.5 font-bold">Data Layer</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               <Node
                 name="MongoDB Atlas"
                 sub="Database Cluster"
                 type="data"
-                desc="Cloud-hosted MongoDB Atlas NoSQL database storing projects data, resume download logs, and user credentials."
-              />
-              <Node
-                name="Redis Cache"
-                sub="Planned: Caching"
-                type="data"
-                desc="In-memory database planned for caching database queries and session tracking (future roadmap)."
+                desc="Cloud-hosted MongoDB Atlas NoSQL database storing projects, uploaded images, blog posts, contact messages, download logs, and admin credentials."
               />
             </div>
           </div>
@@ -589,27 +587,15 @@ function SystemTopologyCard() {
             </div>
           </div>
 
-          {/* External Services & IoT */}
+          {/* External Services */}
           <div className="border border-purple-500/10 bg-purple-500/[0.01] p-3.5 rounded-2xl flex flex-col gap-2">
-            <div className="text-[9px] font-mono text-purple-500/80 uppercase tracking-widest mb-1.5 font-bold">External & IoT Integration</div>
+            <div className="text-[9px] font-mono text-purple-500/80 uppercase tracking-widest mb-1.5 font-bold">External Services</div>
             <div className="flex flex-col gap-2">
               <Node
-                name="IoT Devices (MQTT)"
-                sub="ESP32 Telemetry Bridge"
-                type="external"
-                desc="Simulated or hardware microcontrollers (ESP32/Arduino) sending environmental telemetry via MQTT protocols."
-              />
-              <Node
                 name="Email Provider (SMTP)"
-                sub="Gmail API Dispatcher"
+                sub="Nodemailer Dispatcher"
                 type="external"
-                desc="Transactional email delivery service (Gmail API/SMTP) for instant contact form notifications."
-              />
-              <Node
-                name="GitHub API"
-                sub="Stat Syncing"
-                type="external"
-                desc="Integrates with GitHub REST API to fetch live repository metadata and contribution statistics."
+                desc="Transactional email delivery service (SMTP/Nodemailer) for instant contact form notifications."
               />
             </div>
           </div>
