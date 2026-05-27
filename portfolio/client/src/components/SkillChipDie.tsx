@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '../hooks/useTheme';
 
 // ─── Data Types ──────────────────────────────────────────────────────────────
 
@@ -59,8 +58,6 @@ const blocks: BlockData[] = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const SkillChipDie: React.FC = () => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
   const [hoveredBlock, setHoveredBlock] = useState<string | null>(null);
 
   return (

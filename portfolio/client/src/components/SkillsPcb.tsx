@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '../hooks/useTheme';
 import SkillChip from './SkillChip';
 
 // ─── Data Types ──────────────────────────────────────────────────────────────
@@ -124,8 +123,6 @@ const SMDComponent: React.FC<{
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const SkillsPcb: React.FC = () => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
   const [hoveredChip, setHoveredChip] = useState<string | null>(null);
 
   return (
