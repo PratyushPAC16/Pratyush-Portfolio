@@ -25,16 +25,26 @@ connectDB();
 // Middleware
 const allowedOrigins = ['http://localhost:5173'];
 if (process.env.CLIENT_URL) {
-  allowedOrigins.push(process.env.CLIENT_URL);
+  // Normalize client URL by removing any trailing slash
+  allowedOrigins.push(process.env.CLIENT_URL.replace(/\/$/, ''));
 }
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      // Check if origin matches allowed list or any Vercel preview URL
+      const isAllowed = allowedOrigins.includes(origin) || 
+                        origin.endsWith('.vercel.app');
+
+      if (isAllowed) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(null, false); // Fail CORS cleanly without throwing a 500 server error
       }
     },
     credentials: true,
