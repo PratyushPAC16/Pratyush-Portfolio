@@ -11,6 +11,7 @@ import postRoutes from './routes/posts';
 import contactRoutes from './routes/contact';
 import authRoutes from './routes/auth';
 import analyticsRoutes from './routes/analytics';
+import Image from './models/Image';
 
 // Load environment variables
 dotenv.config();
@@ -42,8 +43,30 @@ app.use(
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Serve static uploads
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Serve uploaded images from MongoDB (with local fallback for dev)
+app.get('/uploads/:filename', async (req, res) => {
+  try {
+    const image = await Image.findOne({ filename: req.params.filename });
+    if (image) {
+      res.set('Content-Type', image.contentType);
+      res.set('Cache-Control', 'public, max-age=31536000'); // cache for 1 year
+      res.send(image.data);
+      return;
+    }
+
+    // Fallback: try local uploads directory (for existing local dev files)
+    const localPath = path.join(__dirname, '../uploads', req.params.filename);
+    res.sendFile(localPath, (err) => {
+      if (err) {
+        res.status(404).json({ message: 'Image not found' });
+      }
+    });
+  } catch (error) {
+    console.error('GET /uploads/:filename error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 // Mount Routes
 app.use('/api/projects', projectRoutes);

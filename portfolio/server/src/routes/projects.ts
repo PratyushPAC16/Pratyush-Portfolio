@@ -2,30 +2,17 @@ import { Router, Request, Response } from 'express';
 import { body, param } from 'express-validator';
 import mongoose from 'mongoose';
 import Project from '../models/Project';
+import Image from '../models/Image';
 import { protect } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 
 const router = Router();
 
-// ─── Multer Config ──────────────────────────────────────────────────────────
+// ─── Multer Config (Memory Storage → MongoDB) ──────────────────────────────
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '../../uploads');
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, `project-${uniqueSuffix}${ext}`);
-  },
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   const allowedTypes = /jpeg|jpg|png|webp|gif/;
@@ -114,7 +101,17 @@ router.post(
         return;
       }
 
-      const relativeUrl = `/uploads/${req.file.filename}`;
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      const ext = path.extname(req.file.originalname);
+      const filename = `project-${uniqueSuffix}${ext}`;
+
+      await Image.create({
+        filename,
+        contentType: req.file.mimetype,
+        data: req.file.buffer,
+      });
+
+      const relativeUrl = `/uploads/${filename}`;
       res.status(200).json({ url: relativeUrl });
     } catch (error) {
       console.error('POST /api/projects/upload error:', error);
