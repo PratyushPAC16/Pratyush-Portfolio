@@ -561,10 +561,10 @@ function SystemTopologyCard() {
         </div>
 
         {/* RIGHT COLUMN: Deployment & External (2/5 width on desktop) */}
-        <div className="lg:col-span-2 flex flex-col justify-between gap-4">
+        <div className="lg:col-span-2 flex flex-col gap-4">
           
           {/* Hosting & Deployment */}
-          <div className="border border-slate-500/10 bg-slate-500/[0.01] p-3.5 rounded-2xl h-full flex flex-col justify-between">
+          <div className="border border-slate-500/10 bg-slate-500/[0.01] p-3.5 rounded-2xl flex flex-col gap-2">
             <div>
               <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-2.5 font-bold">Hosting & Delivery</div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -581,9 +581,6 @@ function SystemTopologyCard() {
                   desc="Cloud application platform hosting the dynamic Node.js/Express server and background workers."
                 />
               </div>
-            </div>
-            <div className="hidden lg:flex justify-center items-center h-full my-1">
-              <div className="w-px h-12 bg-slate-500/10 border-dashed border-l" />
             </div>
           </div>
 
