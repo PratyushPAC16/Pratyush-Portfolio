@@ -39,8 +39,8 @@ const projectValidators = [
   body('domain')
     .notEmpty()
     .withMessage('Domain is required')
-    .isIn(['IoT', 'ML', 'VLSI', 'Web'])
-    .withMessage('Domain must be one of: IoT, ML, VLSI, Web'),
+    .isIn(['IoT', 'ML', 'AI', 'Web'])
+    .withMessage('Domain must be one of: IoT, ML, AI, Web'),
   body('techStack').optional().isArray().withMessage('techStack must be an array'),
   body('githubUrl').optional().isURL().withMessage('githubUrl must be a valid URL'),
   body('liveUrl').optional().isURL().withMessage('liveUrl must be a valid URL'),
@@ -132,7 +132,7 @@ router.post(
       const { title, description, domain, techStack, githubUrl, liveUrl, thumbnail, featured } = req.body as {
         title: string;
         description: string;
-        domain: 'IoT' | 'ML' | 'VLSI' | 'Web';
+        domain: 'IoT' | 'ML' | 'AI' | 'Web';
         techStack?: string[];
         githubUrl?: string;
         liveUrl?: string;

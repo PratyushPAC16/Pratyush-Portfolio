@@ -13,7 +13,7 @@ const INPUT_CLS =
 const DOMAIN_COLORS: Record<ProjectDomain, string> = {
   IoT:  '#34d399',
   ML:   '#38bdf8',
-  VLSI: '#fbbf24',
+  AI:   '#fbbf24',
   Web:  '#a78bfa',
 };
 
@@ -147,7 +147,7 @@ function ProjectModal({ mode, initial, onSave, onClose }: ModalProps) {
             <label className="block text-xs font-medium text-slate-400 mb-1.5">Domain *</label>
             <select className={INPUT_CLS} value={form.domain}
               onChange={(e) => set('domain', e.target.value as ProjectDomain)}>
-              {(['IoT', 'ML', 'VLSI', 'Web'] as ProjectDomain[]).map((d) => (
+              {(['IoT', 'ML', 'AI', 'Web'] as ProjectDomain[]).map((d) => (
                 <option key={d} value={d}>{d}</option>
               ))}
             </select>

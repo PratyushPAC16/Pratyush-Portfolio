@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export type ProjectDomain = 'IoT' | 'ML' | 'VLSI' | 'Web';
+export type ProjectDomain = 'IoT' | 'ML' | 'AI' | 'Web';
 
 export interface IProject extends Document {
   title: string;
@@ -28,7 +28,7 @@ const ProjectSchema: Schema = new Schema(
     domain: {
       type: String,
       enum: {
-        values: ['IoT', 'ML', 'VLSI', 'Web'],
+        values: ['IoT', 'ML', 'AI', 'Web'],
         message: '{VALUE} is not a valid project domain',
       },
       required: [true, 'Domain is required'],

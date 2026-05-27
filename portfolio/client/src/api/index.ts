@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type ProjectDomain = 'IoT' | 'ML' | 'VLSI' | 'Web';
+export type ProjectDomain = 'IoT' | 'ML' | 'AI' | 'Web';
 
 export interface Project {
   _id: string;

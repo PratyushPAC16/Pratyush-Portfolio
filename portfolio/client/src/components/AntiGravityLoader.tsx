@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 const BOOT_LOGS = [
   'Initializing AntiGravity OS kernel...',
   'Connecting to MongoDB cluster telemetry...',
-  'Syncing IoT, ML, and VLSI nodes...',
+  'Syncing IoT, ML, and AI nodes...',
   'Calibrating orbital canvas render context...',
   'Preheating semiconductor device simulation modules...',
   'Loading portfolio projects & laboratory logs...',
@@ -115,7 +115,7 @@ export default function AntiGravityLoader() {
           transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
         />
 
-        {/* Central Floating Chip (Semiconductor / VLSI Vibe) */}
+        {/* Central Floating Chip (Semiconductor / AI Vibe) */}
         <motion.div
           className="relative w-24 h-24 rounded-2xl border border-[#63ffd2]/30 bg-slate-950/80 backdrop-blur-md flex items-center justify-center"
           style={{

@@ -22,7 +22,7 @@ interface OutputLine {
 
 const WHOAMI_LINES = [
   '  name    : Pratyush',
-  '  role    : Full-Stack Developer • IoT • ML • VLSI',
+  '  role    : Full-Stack Developer • IoT • ML • AI',
   '  college : NIT Tiruchirappalli (ECE)',
   '  status  : Open to SDE / Embedded / IoT roles',
   '  stack   : React • Node.js • MongoDB • Python • Verilog',
@@ -31,7 +31,7 @@ const WHOAMI_LINES = [
 const SKILLS_LINES = [
   '  [Web]      React · Node.js · Express · MongoDB · TypeScript · Tailwind',
   '  [ML]       Python · PyTorch · Scikit-learn · NumPy · OpenCV',
-  '  [VLSI]     Verilog · Cadence · ADS · SPICE · LTspice',
+  '  [AI]       TensorFlow · PyTorch · Keras · HuggingFace · LLMs',
   '  [Embedded] IoT · MQTT · Arduino · ESP32 · FreeRTOS · Raspberry Pi',
 ];
 

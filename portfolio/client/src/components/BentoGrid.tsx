@@ -105,7 +105,7 @@ function HeroCard({ onLabMode }: { onLabMode: () => void }) {
             className="text-base font-semibold mb-3 text-teal-600 dark:text-[#63ffd2]"
             style={{ textShadow: isDark ? '0 0 20px rgba(99,255,210,0.4)' : undefined }}
           >
-            Full-Stack Developer&nbsp;•&nbsp;IoT&nbsp;•&nbsp;ML&nbsp;•&nbsp;VLSI
+            Full-Stack Developer&nbsp;•&nbsp;IoT&nbsp;•&nbsp;ML&nbsp;•&nbsp;AI
           </p>
 
           {/* Tagline */}
@@ -250,7 +250,7 @@ const DOMAIN_COLORS = (isDark: boolean): Record<string, { bg: string; text: stri
   ML:   isDark
     ? { bg: 'rgba(56,189,248,0.1)',  text: '#38bdf8', border: 'rgba(56,189,248,0.25)' }
     : { bg: 'rgba(2,132,199,0.06)',  text: '#0284c7', border: 'rgba(2,132,199,0.2)' },
-  VLSI: isDark
+  AI: isDark
     ? { bg: 'rgba(251,191,36,0.1)',  text: '#fbbf24', border: 'rgba(251,191,36,0.25)' }
     : { bg: 'rgba(217,119,6,0.06)',  text: '#d97706', border: 'rgba(217,119,6,0.2)' },
   Web:  isDark
@@ -274,7 +274,7 @@ function ProjectsCard() {
   const fallbackProjects = [
     { _id: '1', title: 'Smart Agriculture IoT Hub', domain: 'IoT', techStack: ['MQTT', 'ESP32', 'Node.js'] },
     { _id: '2', title: 'Neural Style Transfer', domain: 'ML', techStack: ['PyTorch', 'Python', 'CUDA'] },
-    { _id: '3', title: 'RISC-V Processor Core', domain: 'VLSI', techStack: ['Verilog', 'Cadence', 'Synopsys'] },
+    { _id: '3', title: 'AI Coprocessor Core', domain: 'AI', techStack: ['Verilog', 'PyTorch', 'Synopsys'] },
   ] as Project[];
 
   const displayProjects = projects.length > 0 ? projects : (!loading ? fallbackProjects : []);
@@ -349,7 +349,7 @@ function ProjectsCard() {
         className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800"
       >
         <p className="text-[11px] text-slate-500 dark:text-slate-500">
-          Spanning IoT • ML • VLSI • Web domains
+          Spanning IoT • ML • AI • Web domains
         </p>
       </div>
     </motion.div>
