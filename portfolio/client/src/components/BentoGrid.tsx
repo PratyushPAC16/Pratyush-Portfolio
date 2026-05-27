@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getProjects, type Project } from '../api';
@@ -594,9 +595,95 @@ function SystemTopologyCard() {
 
 // ─── 5. ContactCard ───────────────────────────────────────────────────────────
 
+interface SocialCardProps {
+  name: string;
+  url: string;
+  sub: string;
+  color: 'slate' | 'blue' | 'amber' | 'zinc';
+  isDark: boolean;
+  icon: ReactNode;
+}
+
+function SocialCard({
+  name,
+  url,
+  sub,
+  color,
+  isDark,
+  icon,
+}: SocialCardProps) {
+  const styles = {
+    slate: {
+      border: 'border-slate-500/20 hover:border-slate-400/40',
+      text: 'text-slate-400',
+      bgGlow: 'hover:shadow-[0_0_15px_rgba(148,163,184,0.08)] hover:bg-slate-900/50',
+      iconColor: 'text-slate-400',
+    },
+    blue: {
+      border: 'border-blue-500/20 hover:border-blue-400/40',
+      text: 'text-blue-400',
+      bgGlow: 'hover:shadow-[0_0_15px_rgba(59,130,246,0.08)] hover:bg-blue-950/20',
+      iconColor: 'text-blue-500 dark:text-blue-400',
+    },
+    amber: {
+      border: 'border-amber-500/20 hover:border-amber-400/40',
+      text: 'text-amber-400',
+      bgGlow: 'hover:shadow-[0_0_15px_rgba(245,158,11,0.08)] hover:bg-amber-950/20',
+      iconColor: 'text-amber-500 dark:text-amber-400',
+    },
+    zinc: {
+      border: 'border-zinc-500/20 hover:border-zinc-400/40',
+      text: 'text-zinc-400',
+      bgGlow: 'hover:shadow-[0_0_15px_rgba(161,161,170,0.08)] hover:bg-zinc-900/50',
+      iconColor: 'text-zinc-400',
+    },
+  }[color];
+
+  return (
+    <motion.a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      whileHover={{ y: -2, scale: 1.02 }}
+      className={`p-3.5 rounded-xl border flex flex-col justify-between gap-3 transition-all duration-300 ${
+        isDark
+          ? `bg-slate-950/40 backdrop-blur-md ${styles.border} ${styles.bgGlow}`
+          : 'bg-slate-50 border-slate-200 hover:border-slate-300'
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          className={`p-2 rounded-lg shrink-0 ${
+            isDark ? 'bg-slate-900/80 border border-slate-800' : 'bg-white border border-slate-200'
+          } ${styles.iconColor}`}
+        >
+          {icon}
+        </motion.div>
+        
+        <span className="text-slate-400 dark:text-slate-600">
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </span>
+      </div>
+      
+      <div className="flex flex-col gap-0.5">
+        <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+          {name}
+        </span>
+        <span className="text-[10px] text-slate-500 dark:text-slate-500 font-medium">
+          {sub}
+        </span>
+      </div>
+    </motion.a>
+  );
+}
+
 function ContactCard() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const [copied, setCopied] = useState(false);
 
   const email = 'pratyushanand160705@gmail.com';
   const github = 'https://github.com/PratyushPAC16';
@@ -604,119 +691,207 @@ function ContactCard() {
   const leetcode = 'https://leetcode.com/u/PratyushPAC/';
   const twitter = 'https://x.com/pratyushpac?s=21';
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   return (
-    <motion.div variants={getCardVariants(isDark)} whileHover="hover" className="glass-card p-5 flex flex-col justify-between transition-all duration-300">
-      <div>
-        {/* Availability pill */}
-        <div
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3"
-          style={{
-            background: isDark ? 'rgba(99,255,210,0.07)' : '#f0fdfa',
-            border: isDark ? '1px solid rgba(99,255,210,0.18)' : '1px solid #99f6e4',
-            color: isDark ? '#63ffd2' : '#0f766e',
-          }}
-        >
-          <span
-            className="w-1.5 h-1.5 rounded-full animate-pulse bg-teal-500 dark:bg-[#63ffd2]"
-            style={{ boxShadow: isDark ? '0 0 6px #63ffd2' : '0 0 6px #0d9488' }}
-          />
-          Open to opportunities
+    <motion.div
+      variants={getCardVariants(isDark)}
+      whileHover="hover"
+      className="glass-card p-6 flex flex-col gap-6 relative overflow-hidden transition-all duration-300"
+    >
+      {/* Subtle radial glow behind the section */}
+      <div
+        className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full pointer-events-none opacity-40 blur-[80px]"
+        style={{
+          background: isDark
+            ? 'radial-gradient(circle, rgba(99,255,210,0.15) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 70%)',
+        }}
+      />
+
+      {/* 1. Top Intro Area */}
+      <div className="relative z-10 flex flex-col gap-3">
+        {/* Availability Badge */}
+        <div className="flex items-center">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
+            style={{
+              background: isDark ? 'rgba(99,255,210,0.07)' : '#f0fdfa',
+              border: isDark ? '1px solid rgba(99,255,210,0.18)' : '1px solid #99f6e4',
+              color: isDark ? '#63ffd2' : '#0f766e',
+            }}
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+            </span>
+            Available for new opportunities
+          </div>
         </div>
 
-        <h2 className="text-sm font-semibold text-slate-800 dark:text-white mb-1">Let's Connect</h2>
-        <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4">
-          Open to SDE&nbsp;/&nbsp;Embedded&nbsp;/&nbsp;IoT roles — full-time or contract.
-        </p>
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white mb-1">
+            Let's Connect
+          </h2>
+          <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+            Have an exciting opportunity, project, or internship? Feel free to reach out!
+          </p>
+        </div>
+
+        {/* Stats / Info Row */}
+        <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs font-mono text-slate-500 dark:text-slate-400/70 border-t border-slate-200/50 dark:border-slate-800/50 pt-3">
+          <div className="flex items-center gap-1.5">
+            <span className="text-teal-500">❖</span> Open to SDE / Embedded / IoT
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-teal-500">❖</span> Usually replies within 24h
+          </div>
+        </div>
       </div>
 
-      <div className="space-y-2">
-        {/* Email button */}
-        <a
-          href={`mailto:${email}`}
-          className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl text-sm transition-all hover:scale-[1.02]"
-          style={{
-            background: isDark ? 'rgba(99,255,210,0.08)' : '#f0fdfa',
-            border: isDark ? '1px solid rgba(99,255,210,0.2)' : '1px solid #99f6e4',
-            color: isDark ? '#63ffd2' : '#0f766e',
-          }}
-        >
-          <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-          <span className="text-xs font-medium truncate">{email}</span>
-        </a>
-
-        {/* Social grid */}
-        <div className="grid grid-cols-2 gap-2">
-          <a
-            href={github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium transition-all hover:scale-[1.02]"
-            style={{
-              background: isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc',
-              border: isDark ? '1px solid rgba(255,255,255,0.09)' : '1px solid #cbd5e1',
-              color: isDark ? '#94a3b8' : '#334155',
-            }}
-          >
-            <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.113.793-.263.793-.587v-2.05c-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.775.418-1.305.762-1.605-2.665-.3-5.467-1.334-5.467-5.932 0-1.31.468-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.3 1.23A11.5 11.5 0 0112 6.803c1.02.005 2.047.138 3.006.404 2.29-1.552 3.297-1.23 3.297-1.23.655 1.653.243 2.874.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.807 5.628-5.48 5.922.43.372.814 1.103.814 2.222v3.293c0 .327.19.705.8.586C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z" />
+      {/* 2. Main Featured Contact Card */}
+      <motion.div
+        whileHover={{ y: -2 }}
+        className={`relative z-10 p-5 rounded-2xl border transition-all duration-300 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${
+          isDark
+            ? 'bg-slate-950/60 border-teal-500/20 hover:border-teal-500/40 shadow-[0_4px_20px_rgba(99,255,210,0.02)] hover:shadow-[0_4px_24px_rgba(99,255,210,0.06)]'
+            : 'bg-white border-slate-200 hover:border-teal-300 shadow-[0_4px_12px_rgba(0,0,0,0.02)]'
+        }`}
+      >
+        {/* Left Side: Info */}
+        <div className="flex items-start gap-4">
+          <div className="p-3 rounded-xl bg-teal-500/10 text-teal-600 dark:text-[#63ffd2] shrink-0 border border-teal-500/20">
+            <svg className="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            GitHub
-          </a>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-teal-600 dark:text-[#63ffd2] font-semibold">
+              Best way to reach me
+            </span>
+            <span className="text-sm md:text-base font-bold text-slate-800 dark:text-slate-200 font-mono tracking-tight break-all">
+              {email}
+            </span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-500">
+              For internships, full-time roles, collaborations
+            </span>
+          </div>
+        </div>
 
-          <a
-            href={linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium transition-all hover:scale-[1.02]"
-            style={{
-              background: isDark ? 'rgba(10,102,194,0.1)' : '#eff6ff',
-              border: isDark ? '1px solid rgba(10,102,194,0.3)' : '1px solid #93c5fd',
-              color: isDark ? '#60a5fa' : '#0a66c2',
-            }}
+        {/* Right Side: Actions */}
+        <div className="flex items-center gap-2.5 w-full md:w-auto justify-start md:justify-end">
+          {/* Copy Button */}
+          <button
+            onClick={handleCopy}
+            className={`flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all select-none border font-mono flex-1 md:flex-none ${
+              copied
+                ? 'bg-teal-500/10 border-teal-500 text-teal-500 dark:text-[#63ffd2]'
+                : isDark
+                ? 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-800'
+            }`}
           >
-            <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-            </svg>
-            LinkedIn
-          </a>
+            {copied ? (
+              <>
+                <svg className="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+                Copied!
+              </>
+            ) : (
+              <>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
+                    d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+                Copy
+              </>
+            )}
+          </button>
 
+          {/* Email Me Button */}
           <a
-            href={leetcode}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium transition-all hover:scale-[1.02]"
-            style={{
-              background: isDark ? 'rgba(255,161,22,0.08)' : '#fffbeb',
-              border: isDark ? '1px solid rgba(255,161,22,0.25)' : '1px solid #fde68a',
-              color: isDark ? '#ffa116' : '#b45309',
-            }}
+            href={`mailto:${email}`}
+            className={`flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all border flex-1 md:flex-none ${
+              isDark
+                ? 'bg-[#63ffd2] border-[#63ffd2] text-slate-950 hover:bg-[#4cebbd] hover:shadow-[0_0_12px_rgba(99,255,210,0.3)]'
+                : 'bg-teal-600 border-teal-600 text-white hover:bg-teal-700'
+            }`}
           >
-            <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13.483 0a1.374 1.374 0 0 0-.961.411L7.1 5.828a1.374 1.374 0 0 0-.005 1.945l6.4 6.4a1.374 1.374 0 0 0 1.942.007l5.421-5.419a1.374 1.374 0 0 0-.007-1.942l-6.4-6.4a1.374 1.374 0 0 0-.968-.41zm-.022 1.372l6.4 6.4-5.42 5.42-6.4-6.4zm-8.603 9.612a1.374 1.374 0 0 0-.968.41L.412 14.162a1.374 1.374 0 0 0 .007 1.942l6.4 6.4a1.374 1.374 0 0 0 1.942-.007l2.768-2.766a1.374 1.374 0 0 0-.007-1.942l-6.4-6.4a1.374 1.374 0 0 0-.968-.41zm-.022 1.372l6.4 6.4-2.766 2.768-6.4-6.4z" />
+            <span>Email me</span>
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-            LeetCode
-          </a>
-
-          <a
-            href={twitter}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium transition-all hover:scale-[1.02]"
-            style={{
-              background: isDark ? 'rgba(255,255,255,0.05)' : '#f8fafc',
-              border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #cbd5e1',
-              color: isDark ? '#ffffff' : '#0f172a',
-            }}
-          >
-            <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-            </svg>
-            X
           </a>
         </div>
+      </motion.div>
+
+      {/* 3. Secondary Social Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 relative z-10">
+        {/* GitHub */}
+        <SocialCard
+          name="GitHub"
+          url={github}
+          sub="Code & projects"
+          color="slate"
+          isDark={isDark}
+          icon={
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.113.793-.263.793-.587v-2.05c-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.775.418-1.305.762-1.605-2.665-.3-5.467-1.334-5.467-5.932 0-1.31.468-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.3 1.23A11.5 11.5 0 0112 6.803c1.02.005 2.047.138 3.006.404 2.29-1.552 3.297-1.23 3.297-1.23.655 1.653.243 2.874.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.807 5.628-5.48 5.922.43.372.814 1.103.814 2.222v3.293c0 .327.19.705.8.586C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+          }
+        />
+
+        {/* LinkedIn */}
+        <SocialCard
+          name="LinkedIn"
+          url={linkedin}
+          sub="Professional profile"
+          color="blue"
+          isDark={isDark}
+          icon={
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+            </svg>
+          }
+        />
+
+        {/* LeetCode */}
+        <SocialCard
+          name="LeetCode"
+          url={leetcode}
+          sub="DSA practice"
+          color="amber"
+          isDark={isDark}
+          icon={
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13.483 0a1.374 1.374 0 0 0-.961.411L7.1 5.828a1.374 1.374 0 0 0-.005 1.945l6.4 6.4a1.374 1.374 0 0 0 1.942.007l5.421-5.419a1.374 1.374 0 0 0-.007-1.942l-6.4-6.4a1.374 1.374 0 0 0-.968-.41zm-.022 1.372l6.4 6.4-5.42 5.42-6.4-6.4zm-8.603 9.612a1.374 1.374 0 0 0-.968.41L.412 14.162a1.374 1.374 0 0 0 .007 1.942l6.4 6.4a1.374 1.374 0 0 0 1.942-.007l2.768-2.766a1.374 1.374 0 0 0-.007-1.942l-6.4-6.4a1.374 1.374 0 0 0-.968-.41zm-.022 1.372l6.4 6.4-2.766 2.768-6.4-6.4z" />
+            </svg>
+          }
+        />
+
+        {/* X (formerly Twitter) */}
+        <SocialCard
+          name="X"
+          url={twitter}
+          sub="Thoughts & updates"
+          color="zinc"
+          isDark={isDark}
+          icon={
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          }
+        />
       </div>
     </motion.div>
   );
