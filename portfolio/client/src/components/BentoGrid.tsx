@@ -472,131 +472,105 @@ function SystemTopologyCard() {
       </div>
 
       {/* Main Diagram Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div className="flex flex-col gap-1">
         
-        {/* LEFT COLUMN: Core Path (3/5 width on desktop) */}
-        <div className="lg:col-span-3 flex flex-col justify-between">
-          
-          {/* Client Layer */}
-          <div className="border border-teal-500/10 bg-teal-500/[0.01] p-3.5 rounded-2xl">
-            <div className="text-[9px] font-mono text-teal-500/80 uppercase tracking-widest mb-2.5 font-bold">Client Layer</div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <Node
-                name="Portfolio UI"
-                sub="React 19 SPA"
-                type="client"
-                desc="Client Single Page Application built with React 19, Vite, and Tailwind CSS. Hosted on Vercel."
-              />
-              <Node
-                name="Lab Console"
-                sub="Telemetry overlay"
-                type="client"
-                desc="Interactive slide-out terminal console overlay for monitoring system statistics and running virtual diagnostics."
-              />
-              <Node
-                name="Admin Dashboard"
-                sub="Analytics UI"
-                type="client"
-                desc="Protected admin route for monitoring download metrics, resume logs, and managing portfolio content."
-              />
-            </div>
+        {/* Client Layer */}
+        <div className="border border-teal-500/10 bg-teal-500/[0.01] p-3.5 rounded-2xl">
+          <div className="text-[9px] font-mono text-teal-500/80 uppercase tracking-widest mb-2.5 font-bold">Client Layer</div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <Node
+              name="Portfolio UI"
+              sub="React 19 SPA"
+              type="client"
+              desc="Client Single Page Application built with React 19, Vite, and Tailwind CSS. Hosted on Vercel."
+            />
+            <Node
+              name="Lab Console"
+              sub="Telemetry overlay"
+              type="client"
+              desc="Interactive slide-out terminal console overlay for monitoring system statistics and running virtual diagnostics."
+            />
+            <Node
+              name="Admin Dashboard"
+              sub="Analytics UI"
+              type="client"
+              desc="Protected admin route for monitoring download metrics, resume logs, and managing portfolio content."
+            />
           </div>
-
-          <Connector label="REST / WS" gradient="from-teal-500/20 to-blue-500/20" />
-
-          {/* Backend Layer */}
-          <div className="border border-blue-500/10 bg-blue-500/[0.01] p-3.5 rounded-2xl">
-            <div className="text-[9px] font-mono text-blue-500/80 uppercase tracking-widest mb-2.5 font-bold">Backend Layer</div>
-            <div className="flex flex-col gap-3">
-              <Node
-                name="Express API"
-                sub="Node.js Gateway"
-                type="backend"
-                desc="Core backend API server built with Node.js and Express. Handles API routing, rate limiting, and database queries. Hosted on Render."
-              />
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <Node
-                  name="Auth Service (JWT)"
-                  sub="Session guardian"
-                  type="backend"
-                  desc="Secures admin routes using JSON Web Tokens (JWT) for protected portfolio management."
-                />
-                <Node
-                  name="Contact Service (Email)"
-                  sub="Form dispatcher"
-                  type="backend"
-                  desc="Processes messages sent from the contact form and dispatches them via SMTP (Nodemailer)."
-                />
-                <Node
-                  name="Blog Service"
-                  sub="Posts CRUD"
-                  type="backend"
-                  desc="Manages blog posts with full CRUD operations, slug-based routing, and tag categorization."
-                />
-                <Node
-                  name="Analytics Logger"
-                  sub="Telemetry logs"
-                  type="backend"
-                  desc="Intercepts resume download actions and logs timestamps, user agents, and IP hashes to MongoDB."
-                />
-              </div>
-            </div>
-          </div>
-
-          <Connector label="Mongoose / ODM" gradient="from-blue-500/20 to-emerald-500/20" />
-
-          {/* Data Layer */}
-          <div className="border border-emerald-500/10 bg-emerald-500/[0.01] p-3.5 rounded-2xl">
-            <div className="text-[9px] font-mono text-emerald-500/80 uppercase tracking-widest mb-2.5 font-bold">Data Layer</div>
-            <div className="grid grid-cols-1 gap-2">
-              <Node
-                name="MongoDB Atlas"
-                sub="Database Cluster"
-                type="data"
-                desc="Cloud-hosted MongoDB Atlas NoSQL database storing projects, uploaded images, blog posts, contact messages, download logs, and admin credentials."
-              />
-            </div>
-          </div>
-
         </div>
 
-        {/* RIGHT COLUMN: Deployment & External (2/5 width on desktop) */}
-        <div className="lg:col-span-2 flex flex-col gap-4">
-          
-          {/* Hosting & Deployment */}
-          <div className="border border-slate-500/10 bg-slate-500/[0.01] p-3.5 rounded-2xl flex flex-col gap-2">
-            <div>
-              <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-2.5 font-bold">Hosting & Delivery</div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <Node
-                  name="Vercel (Frontend)"
-                  sub="Global Edge CDN"
-                  type="deploy"
-                  desc="Edge-delivery platform hosting the static portfolio UI with global CDN caching and atomic deployments."
-                />
-                <Node
-                  name="Render (Backend)"
-                  sub="Web Service Dyno"
-                  type="deploy"
-                  desc="Cloud application platform hosting the dynamic Node.js/Express server and background workers."
-                />
-              </div>
-            </div>
-          </div>
+        <Connector label="REST / WS Telemetry" gradient="from-teal-500/20 to-blue-500/20" />
 
-          {/* External Services */}
-          <div className="border border-purple-500/10 bg-purple-500/[0.01] p-3.5 rounded-2xl flex flex-col gap-2">
-            <div className="text-[9px] font-mono text-purple-500/80 uppercase tracking-widest mb-1.5 font-bold">External Services</div>
-            <div className="flex flex-col gap-2">
+        {/* Backend Layer */}
+        <div className="border border-blue-500/10 bg-blue-500/[0.01] p-3.5 rounded-2xl">
+          <div className="text-[9px] font-mono text-blue-500/80 uppercase tracking-widest mb-2.5 font-bold">Backend Layer</div>
+          <div className="flex flex-col gap-3">
+            <Node
+              name="Express API"
+              sub="Node.js Gateway"
+              type="backend"
+              desc="Core backend API server built with Node.js and Express. Handles API routing, rate limiting, and database queries. Hosted on Render."
+            />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <Node
-                name="Email Provider (SMTP)"
-                sub="Nodemailer Dispatcher"
-                type="external"
-                desc="Transactional email delivery service (SMTP/Nodemailer) for instant contact form notifications."
+                name="Auth Service (JWT)"
+                sub="Session guardian"
+                type="backend"
+                desc="Secures admin routes using JSON Web Tokens (JWT) for protected portfolio management."
+              />
+              <Node
+                name="Contact Service (Email)"
+                sub="Form dispatcher"
+                type="backend"
+                desc="Processes messages sent from the contact form and dispatches them via SMTP (Nodemailer)."
+              />
+              <Node
+                name="Blog Service"
+                sub="Posts CRUD"
+                type="backend"
+                desc="Manages blog posts with full CRUD operations, slug-based routing, and tag categorization."
+              />
+              <Node
+                name="Analytics Logger"
+                sub="Telemetry logs"
+                type="backend"
+                desc="Intercepts resume download actions and logs timestamps, user agents, and IP hashes to MongoDB."
               />
             </div>
           </div>
+        </div>
 
+        <Connector label="Database, Hosting & Mail Protocols" gradient="from-blue-500/20 via-emerald-500/20 to-purple-500/20" />
+
+        {/* Infrastructure & Cloud Services Layer */}
+        <div className="border border-slate-500/10 bg-slate-500/[0.01] p-3.5 rounded-2xl">
+          <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-2.5 font-bold">Infrastructure & Cloud Services</div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <Node
+              name="Vercel (Frontend)"
+              sub="Global Edge CDN"
+              type="deploy"
+              desc="Edge-delivery platform hosting the static portfolio UI with global CDN caching and atomic deployments."
+            />
+            <Node
+              name="Render (Backend)"
+              sub="Web Service Dyno"
+              type="deploy"
+              desc="Cloud application platform hosting the dynamic Node.js/Express server and background workers."
+            />
+            <Node
+              name="MongoDB Atlas"
+              sub="Database Cluster"
+              type="data"
+              desc="Cloud-hosted MongoDB Atlas NoSQL database storing projects, uploaded images, blog posts, contact messages, download logs, and admin credentials."
+            />
+            <Node
+              name="Email Provider (SMTP)"
+              sub="Nodemailer Dispatcher"
+              type="external"
+              desc="Transactional email delivery service (SMTP/Nodemailer) for instant contact form notifications."
+            />
+          </div>
         </div>
 
       </div>
@@ -779,8 +753,8 @@ export default function BentoGrid() {
         {/* Row 2: Vertical Stack of detailed cards (full width) */}
         <div className="flex flex-col gap-4">
           <SkillsCard />
-          <SystemTopologyCard />
           <ContactCard />
+          <SystemTopologyCard />
         </div>
       </motion.div>
     </>
