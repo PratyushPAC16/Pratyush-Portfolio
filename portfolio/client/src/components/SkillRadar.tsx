@@ -21,7 +21,7 @@ interface SkillDataPoint {
 const data: SkillDataPoint[] = [
   { subject: 'Web', current: 5, target: 5 },
   { subject: 'ML / Data', current: 4, target: 5 },
-  { subject: 'AI', current: 3, target: 4 },
+  { subject: 'VLSI', current: 3, target: 4 },
   { subject: 'Embedded', current: 4, target: 5 },
   { subject: 'DevOps / Tools', current: 3, target: 4 }
 ];

@@ -30,11 +30,11 @@ const blocks: BlockData[] = [
     gridClass: 'col-span-1 lg:col-span-1 row-span-1 lg:row-span-2',
   },
   {
-    id: 'ai',
-    label: 'AI / Deep Learning',
-    codename: 'NEURAL COPROCESSOR // NPU.02',
-    skills: ['TensorFlow', 'Keras', 'OpenCV', 'NLP'],
-    project: 'Image Segmentation & LLM Fine-Tuning',
+    id: 'vlsi',
+    label: 'VLSI / RF',
+    codename: 'RF SIGNAL // ANALOG.MIXED',
+    skills: ['Verilog', 'Cadence', 'ADS'],
+    project: 'RISC-V 32-bit Core & RF Bandpass Filter Sim',
     gridClass: 'col-span-1 lg:col-span-1 row-span-1',
   },
   {

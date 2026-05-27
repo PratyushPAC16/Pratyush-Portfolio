@@ -93,7 +93,7 @@ export default function AdminDashboard() {
         </svg>
       ),
       accent: '#a78bfa',
-      sub: 'Across IoT · ML · AI · Web',
+      sub: 'Across IoT · ML · VLSI · Web',
       link: '/admin/projects',
     },
     {

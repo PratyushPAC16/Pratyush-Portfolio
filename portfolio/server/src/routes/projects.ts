@@ -36,11 +36,6 @@ const upload = multer({
 const projectValidators = [
   body('title').notEmpty().withMessage('Title is required').trim(),
   body('description').notEmpty().withMessage('Description is required'),
-  body('domain')
-    .notEmpty()
-    .withMessage('Domain is required')
-    .isIn(['IoT', 'ML', 'AI', 'Web'])
-    .withMessage('Domain must be one of: IoT, ML, AI, Web'),
   body('techStack').optional().isArray().withMessage('techStack must be an array'),
   body('githubUrl').optional().isURL().withMessage('githubUrl must be a valid URL'),
   body('liveUrl').optional().isURL().withMessage('liveUrl must be a valid URL'),
@@ -129,10 +124,9 @@ router.post(
   validate,
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const { title, description, domain, techStack, githubUrl, liveUrl, thumbnail, featured } = req.body as {
+      const { title, description, techStack, githubUrl, liveUrl, thumbnail, featured } = req.body as {
         title: string;
         description: string;
-        domain: 'IoT' | 'ML' | 'AI' | 'Web';
         techStack?: string[];
         githubUrl?: string;
         liveUrl?: string;
@@ -143,7 +137,6 @@ router.post(
       const project = await Project.create({
         title,
         description,
-        domain,
         techStack,
         githubUrl,
         liveUrl,

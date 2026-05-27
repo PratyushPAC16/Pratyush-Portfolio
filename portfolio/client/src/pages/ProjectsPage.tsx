@@ -1,25 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { getProjects, getDirectImageUrl, type Project, type ProjectDomain } from '../api';
+import { getProjects, getDirectImageUrl, type Project } from '../api';
 
 const MotionLink = motion(Link);
-
-type FilterValue = 'All' | ProjectDomain;
-const FILTERS: FilterValue[] = ['All', 'IoT', 'ML', 'AI', 'Web'];
-
-const DOMAIN_COLORS: Record<ProjectDomain, string> = {
-  ML:  'text-emerald-400 bg-emerald-400/10 border-emerald-400/30',
-  AI:   'text-sky-400 bg-sky-400/10 border-sky-400/30',
-  IoT: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
-  Web:  'text-violet-400 bg-violet-400/10 border-violet-400/30',
-};
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<FilterValue>('All');
 
   useEffect(() => {
     getProjects()
@@ -28,29 +17,10 @@ export default function ProjectsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = filter === 'All' ? projects : projects.filter((p) => p.domain === filter);
-
   return (
     <section>
       <h1 className="text-3xl font-bold text-white mb-2">Projects</h1>
-      <p className="text-slate-400 mb-6">A collection of work across hardware, software, and ML.</p>
-
-      {/* Domain filter buttons */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-              filter === f
-                ? 'bg-violet-600 border-violet-500 text-white'
-                : 'border-slate-700 text-slate-400 hover:border-violet-500 hover:text-violet-300'
-            }`}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
+      <p className="text-slate-400 mb-8">A collection of work across hardware, software, and ML.</p>
 
       {/* States */}
       {loading && (
@@ -65,11 +35,11 @@ export default function ProjectsPage() {
       {/* Project grid */}
       {!loading && !error && (
         <>
-          {filtered.length === 0 ? (
-            <p className="text-slate-500 text-center py-16">No projects found for this domain.</p>
+          {projects.length === 0 ? (
+            <p className="text-slate-500 text-center py-16">No projects found.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map((project) => (
+              {projects.map((project) => (
                 <MotionLink
                   key={project._id}
                   to={`/projects/${project._id}`}
@@ -95,13 +65,6 @@ export default function ProjectsPage() {
                       </div>
                     )}
                   </div>
-
-                  {/* Domain badge */}
-                  <span
-                    className={`self-start text-xs font-semibold px-2 py-0.5 rounded-full border mb-3 ${DOMAIN_COLORS[project.domain]}`}
-                  >
-                    {project.domain}
-                  </span>
 
                   <h2 className="text-base font-semibold text-white group-hover:text-violet-300 transition-colors line-clamp-2 mb-2">
                     {project.title}

@@ -22,7 +22,7 @@ interface OutputLine {
 
 const WHOAMI_LINES = [
   '  name    : Pratyush',
-  '  role    : Full-Stack Developer • IoT • ML • AI',
+  '  role    : Full-Stack Developer • IoT • ML • VLSI',
   '  college : NIT Tiruchirappalli (ECE)',
   '  status  : Open to SDE / Embedded / IoT roles',
   '  stack   : React • Node.js • MongoDB • Python • Verilog',
@@ -31,7 +31,7 @@ const WHOAMI_LINES = [
 const SKILLS_LINES = [
   '  [Web]      React · Node.js · Express · MongoDB · TypeScript · Tailwind',
   '  [ML]       Python · PyTorch · Scikit-learn · NumPy · OpenCV',
-  '  [AI]       TensorFlow · PyTorch · Keras · HuggingFace · LLMs',
+  '  [VLSI]     Verilog · Cadence · ADS · SPICE · LTspice',
   '  [Embedded] IoT · MQTT · Arduino · ESP32 · FreeRTOS · Raspberry Pi',
 ];
 
@@ -205,7 +205,7 @@ function useCommands(
         const lines = [
           '',
           `  Found ${projects.length} project(s):`,
-          ...projects.map((p, i) => `  ${i + 1}. [${p.domain}] ${p.title}`),
+          ...projects.map((p, i) => `  ${i + 1}. ${p.title}`),
           '',
           '  Tip: type "open <project name>" to navigate.',
           '',

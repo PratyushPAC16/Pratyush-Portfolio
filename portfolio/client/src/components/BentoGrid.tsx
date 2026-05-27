@@ -105,7 +105,7 @@ function HeroCard({ onLabMode }: { onLabMode: () => void }) {
             className="text-base font-semibold mb-3 text-teal-600 dark:text-[#63ffd2]"
             style={{ textShadow: isDark ? '0 0 20px rgba(99,255,210,0.4)' : undefined }}
           >
-            Full-Stack Developer&nbsp;•&nbsp;IoT&nbsp;•&nbsp;ML&nbsp;•&nbsp;AI
+            Full-Stack Developer&nbsp;•&nbsp;IoT&nbsp;•&nbsp;ML&nbsp;•&nbsp;VLSI
           </p>
 
           {/* Tagline */}
@@ -243,21 +243,6 @@ function HeroCard({ onLabMode }: { onLabMode: () => void }) {
 
 // ─── 2. ProjectsCard ──────────────────────────────────────────────────────────
 
-const DOMAIN_COLORS = (isDark: boolean): Record<string, { bg: string; text: string; border: string }> => ({
-  IoT:  isDark
-    ? { bg: 'rgba(52,211,153,0.1)',  text: '#34d399', border: 'rgba(52,211,153,0.25)' }
-    : { bg: 'rgba(22,163,74,0.06)',  text: '#16a34a', border: 'rgba(22,163,74,0.2)' },
-  ML:   isDark
-    ? { bg: 'rgba(56,189,248,0.1)',  text: '#38bdf8', border: 'rgba(56,189,248,0.25)' }
-    : { bg: 'rgba(2,132,199,0.06)',  text: '#0284c7', border: 'rgba(2,132,199,0.2)' },
-  AI: isDark
-    ? { bg: 'rgba(251,191,36,0.1)',  text: '#fbbf24', border: 'rgba(251,191,36,0.25)' }
-    : { bg: 'rgba(217,119,6,0.06)',  text: '#d97706', border: 'rgba(217,119,6,0.2)' },
-  Web:  isDark
-    ? { bg: 'rgba(167,139,250,0.1)', text: '#a78bfa', border: 'rgba(167,139,250,0.25)' }
-    : { bg: 'rgba(124,58,237,0.06)', text: '#7c3aed', border: 'rgba(124,58,237,0.2)' },
-});
-
 function ProjectsCard() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -272,13 +257,12 @@ function ProjectsCard() {
   }, []);
 
   const fallbackProjects = [
-    { _id: '1', title: 'Smart Agriculture IoT Hub', domain: 'IoT', techStack: ['MQTT', 'ESP32', 'Node.js'] },
-    { _id: '2', title: 'Neural Style Transfer', domain: 'ML', techStack: ['PyTorch', 'Python', 'CUDA'] },
-    { _id: '3', title: 'AI Coprocessor Core', domain: 'AI', techStack: ['Verilog', 'PyTorch', 'Synopsys'] },
+    { _id: '1', title: 'Smart Agriculture IoT Hub', techStack: ['MQTT', 'ESP32', 'Node.js'] },
+    { _id: '2', title: 'Neural Style Transfer', techStack: ['PyTorch', 'Python', 'CUDA'] },
+    { _id: '3', title: 'RISC-V Processor Core', techStack: ['Verilog', 'Cadence', 'Synopsys'] },
   ] as Project[];
 
   const displayProjects = projects.length > 0 ? projects : (!loading ? fallbackProjects : []);
-  const domainColors = DOMAIN_COLORS(isDark);
 
   return (
     <motion.div
@@ -305,7 +289,6 @@ function ProjectsCard() {
       ) : (
         <div className="space-y-3 flex-grow">
           {displayProjects.map((p) => {
-            const domainStyle = domainColors[p.domain] ?? domainColors.Web;
             return (
               <Link
                 key={p._id}
@@ -316,18 +299,6 @@ function ProjectsCard() {
                   border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #cbd5e1',
                 }}
               >
-                {/* Domain badge */}
-                <span
-                  className="text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 inline-block"
-                  style={{
-                    background: domainStyle.bg,
-                    color: domainStyle.text,
-                    border: `1px solid ${domainStyle.border}`,
-                  }}
-                >
-                  {p.domain}
-                </span>
-
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-2 line-clamp-1">{p.title}</p>
 
                 <div className="flex flex-wrap gap-1.5 mt-2">
@@ -349,7 +320,7 @@ function ProjectsCard() {
         className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800"
       >
         <p className="text-[11px] text-slate-500 dark:text-slate-500">
-          Spanning IoT • ML • AI • Web domains
+          Engineering & development projects
         </p>
       </div>
     </motion.div>

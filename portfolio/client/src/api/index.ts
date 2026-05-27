@@ -2,13 +2,10 @@ import axios from 'axios';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type ProjectDomain = 'IoT' | 'ML' | 'AI' | 'Web';
-
 export interface Project {
   _id: string;
   title: string;
   description: string;
-  domain: ProjectDomain;
   techStack: string[];
   githubUrl?: string;
   liveUrl?: string;
@@ -55,7 +52,6 @@ export interface LoginResponse {
 export interface ProjectPayload {
   title: string;
   description: string;
-  domain: ProjectDomain;
   techStack: string[];
   githubUrl?: string;
   liveUrl?: string;

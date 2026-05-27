@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import {
   getProjects, createProject, updateProject, deleteProject,
   uploadImage, getDirectImageUrl,
-  type Project, type ProjectDomain, type ProjectPayload,
+  type Project, type ProjectPayload,
 } from '../../api';
 
 // ─── Shared UI helpers ────────────────────────────────────────────────────────
@@ -10,42 +10,25 @@ import {
 const INPUT_CLS =
   'w-full bg-slate-900/60 border border-white/10 hover:border-white/20 focus:border-teal-400/40 focus:ring-1 focus:ring-teal-400/10 rounded-lg px-3 py-2 text-sm text-slate-200 placeholder-slate-600 outline-none transition-colors';
 
-const DOMAIN_COLORS: Record<ProjectDomain, string> = {
-  IoT:  '#34d399',
-  ML:   '#38bdf8',
-  AI:   '#fbbf24',
-  Web:  '#a78bfa',
-};
 
-function DomainBadge({ domain }: { domain: ProjectDomain }) {
-  const c = DOMAIN_COLORS[domain] ?? '#94a3b8';
-  return (
-    <span
-      className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-      style={{ background: `${c}18`, color: c, border: `1px solid ${c}30` }}
-    >
-      {domain}
-    </span>
-  );
-}
 
 // ─── Default form shape ───────────────────────────────────────────────────────
 
 type ProjectForm = {
-  title: string; description: string; domain: ProjectDomain;
+  title: string; description: string;
   techStack: string; githubUrl: string; liveUrl: string;
   thumbnail: string; featured: boolean;
 };
 
 const DEFAULT_FORM: ProjectForm = {
-  title: '', description: '', domain: 'Web',
+  title: '', description: '',
   techStack: '', githubUrl: '', liveUrl: '',
   thumbnail: '', featured: false,
 };
 
 function projectToForm(p: Project): ProjectForm {
   return {
-    title: p.title, description: p.description, domain: p.domain,
+    title: p.title, description: p.description,
     techStack: p.techStack.join(', '), githubUrl: p.githubUrl ?? '',
     liveUrl: p.liveUrl ?? '', thumbnail: p.thumbnail ?? '',
     featured: p.featured,
@@ -55,7 +38,6 @@ function projectToForm(p: Project): ProjectForm {
 function formToPayload(f: ProjectForm): ProjectPayload {
   return {
     title: f.title.trim(), description: f.description.trim(),
-    domain: f.domain,
     techStack: f.techStack.split(',').map((s) => s.trim()).filter(Boolean),
     githubUrl: f.githubUrl.trim() || undefined,
     liveUrl: f.liveUrl.trim() || undefined,
@@ -143,15 +125,7 @@ function ProjectModal({ mode, initial, onSave, onClose }: ModalProps) {
               placeholder="Brief project description" />
           </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-400 mb-1.5">Domain *</label>
-            <select className={INPUT_CLS} value={form.domain}
-              onChange={(e) => set('domain', e.target.value as ProjectDomain)}>
-              {(['IoT', 'ML', 'AI', 'Web'] as ProjectDomain[]).map((d) => (
-                <option key={d} value={d}>{d}</option>
-              ))}
-            </select>
-          </div>
+
 
           <div>
             <label className="block text-xs font-medium text-slate-400 mb-1.5">Tech Stack (comma separated)</label>
@@ -347,7 +321,6 @@ export default function AdminProjects() {
             <thead>
               <tr className="border-b border-white/6">
                 <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Title</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Domain</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Featured</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Created</th>
                 <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
@@ -358,10 +331,6 @@ export default function AdminProjects() {
                 <tr key={p._id} className="border-b border-white/4 hover:bg-white/2 transition-colors">
                   <td className="px-5 py-3.5">
                     <p className="font-medium text-slate-200 line-clamp-1">{p.title}</p>
-                    <p className="text-xs text-slate-500 mt-0.5 sm:hidden"><DomainBadge domain={p.domain} /></p>
-                  </td>
-                  <td className="px-4 py-3.5 hidden sm:table-cell">
-                    <DomainBadge domain={p.domain} />
                   </td>
                   <td className="px-4 py-3.5 hidden md:table-cell">
                     {p.featured ? (

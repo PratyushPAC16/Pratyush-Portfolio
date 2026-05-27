@@ -3,13 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { getProject, getDirectImageUrl, type Project } from '../api';
 import TechIcon from '../components/TechIcon';
 
-const DOMAIN_COLORS: Record<string, string> = {
-  ML:  'text-emerald-400 bg-emerald-400/10 border-emerald-400/30',
-  AI:   'text-sky-400 bg-sky-400/10 border-sky-400/30',
-  IoT: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
-  Web:  'text-violet-400 bg-violet-400/10 border-violet-400/30',
-};
-
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<Project | null>(null);
@@ -60,15 +53,8 @@ export default function ProjectDetailPage() {
 
       {/* Header */}
       <div className="mb-6">
-        <span
-          className={`inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full border mb-3 ${
-            DOMAIN_COLORS[project.domain] ?? ''
-          }`}
-        >
-          {project.domain}
-        </span>
         {project.featured && (
-          <span className="ml-2 inline-block text-xs text-amber-400">⭐ Featured</span>
+          <span className="inline-block text-xs text-amber-400">⭐ Featured</span>
         )}
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white mt-1">{project.title}</h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
