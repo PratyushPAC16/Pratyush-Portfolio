@@ -78,6 +78,8 @@ function HeroCard({ onLabMode }: { onLabMode: () => void }) {
                 alt="Pratyush Anand"
                 className="relative w-full h-full object-cover rounded-full object-top"
                 style={{ mixBlendMode: isDark ? 'normal' : 'multiply' }}
+                loading="eager"
+                decoding="async"
               />
             </div>
           </div>
@@ -226,6 +228,8 @@ function HeroCard({ onLabMode }: { onLabMode: () => void }) {
             WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 15%)',
             mixBlendMode: isDark ? 'normal' : 'multiply',
           }}
+          fetchPriority="high"
+          decoding="async"
         />
       </div>
 

@@ -155,6 +155,8 @@ const GridParticles: React.FC = () => {
     if (!ctx) return;
 
     // ── Animation loop ──
+    // We pre-collect alive particle positions to avoid per-particle save/restore
+    // and eliminate shadowBlur (the single biggest GPU bottleneck on canvas).
     const tick = (now: number) => {
       const dt = lastTime.current ? (now - lastTime.current) / 1000 : 0.016;
       lastTime.current = now;
@@ -164,32 +166,29 @@ const GridParticles: React.FC = () => {
 
       ctx.clearRect(0, 0, cw, ch);
 
+      // ── Phase 1: update positions & collect draw data ──
+      type DrawData = { x: number; y: number; color: string; opacity: number };
+      const draws: DrawData[] = [];
+
       for (const p of particles.current) {
         // ── Move ──
         p.progress += (p.speed / GRID) * dt;
 
-        // Check if we reached the target intersection
         while (p.progress >= 1.0) {
           p.life -= GRID;
-          if (p.life <= 0) {
-            break;
-          }
+          if (p.life <= 0) break;
 
           p.startX = p.targetX;
           p.startY = p.targetY;
 
-          // Choose next direction
           const nextDir = getNextDir(p.dir);
           p.dir = nextDir;
-
           const d = DIR_OFFSETS[nextDir];
           p.targetX = p.startX + d.x * GRID;
           p.targetY = p.startY + d.y * GRID;
-
           p.progress -= 1.0;
         }
 
-        // Compute current coordinates
         const x = p.startX + (p.targetX - p.startX) * p.progress;
         const y = p.startY + (p.targetY - p.startY) * p.progress;
 
@@ -200,49 +199,49 @@ const GridParticles: React.FC = () => {
           continue;
         }
 
-        // ── Opacity calculation (life fade + edge fade) ──
+        // ── Opacity (life fade + edge fade) ──
         let opacity = 1;
         const age = p.maxLife - p.life;
-        if (age < GRID) {
-          opacity = age / GRID;
-        } else if (p.life < GRID) {
-          opacity = p.life / GRID;
-        }
+        if (age < GRID) opacity = age / GRID;
+        else if (p.life < GRID) opacity = p.life / GRID;
 
         const edgeDist = Math.min(x, y, cw - x, ch - y);
-        if (edgeDist < GRID) {
-          opacity = Math.min(opacity, Math.max(0, edgeDist / GRID));
-        }
+        if (edgeDist < GRID) opacity = Math.min(opacity, Math.max(0, edgeDist / GRID));
 
         // Slowly drift hue toward target
         p.hue += (p.hueTarget - p.hue) * 0.005;
-        // Randomly retarget hue occasionally
-        if (Math.random() < 0.001) {
-          p.hueTarget = Math.random() < 0.7 ? 0 : 1;
-        }
+        if (Math.random() < 0.001) p.hueTarget = Math.random() < 0.7 ? 0 : 1;
 
-        // ── Draw ──
-        const color = lerpColor(p.hue);
-        ctx.save();
-        ctx.globalAlpha = opacity;
-        
-        ctx.beginPath();
-        ctx.arc(x, y, 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 10;
-        ctx.fill();
-
-        // Second pass for stronger glow core
-        ctx.beginPath();
-        ctx.arc(x, y, 1, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.6)';
-        ctx.shadowBlur = 4;
-        ctx.shadowColor = color;
-        ctx.fill();
-        
-        ctx.restore();
+        draws.push({ x, y, color: lerpColor(p.hue), opacity });
       }
+
+      // ── Phase 2: batched draw — NO shadowBlur, single save/restore ──
+      // Glow is achieved cheaply with a soft radial gradient per dot.
+      ctx.save();
+      for (const { x, y, color, opacity } of draws) {
+        // Soft glow halo via radial gradient (no shadowBlur overhead)
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, 10);
+        grad.addColorStop(0, color.replace('0.85', String(opacity * 0.55)));
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Crisp center dot
+        ctx.globalAlpha = opacity;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // White core highlight
+        ctx.fillStyle = `rgba(255,255,255,${opacity * 0.55})`;
+        ctx.beginPath();
+        ctx.arc(x, y, 0.9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
 
       frameId.current = requestAnimationFrame(tick);
     };
