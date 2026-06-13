@@ -29,10 +29,7 @@ export default defineConfig({
       },
     },
 
-    // Minify with esbuild (default, fast) — explicit for clarity
-    minify: 'esbuild',
-
-    // Generate source maps only in development
+    // sourcemap off in production (oxc minifier is the Vite 8 default)
     sourcemap: false,
   },
 

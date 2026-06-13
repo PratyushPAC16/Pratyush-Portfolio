@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { logResumeDownload } from '../api';
+import { logResumeDownload, getResumeDownloadUrl } from '../api';
 
 export function useResumeDownload() {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,12 +9,31 @@ export function useResumeDownload() {
     setIsLoading(true);
     setError(null);
     try {
-      await logResumeDownload();
-    } catch (err) {
-      console.error('Failed to log resume download:', err);
-      setError('Logging failed, opening resume anyway.');
-    } finally {
-      // Trigger opening/downloading the PDF
+      // Log the download event (fire-and-forget; don't block on it)
+      logResumeDownload().catch(() => {});
+    } catch {
+      // non-fatal
+    }
+
+    // Determine where to get the PDF:
+    // If the server has a resume, use the API URL; otherwise fall back to
+    // the static /resume.pdf bundled in public/
+    const serverUrl = getResumeDownloadUrl();
+
+    try {
+      // Check if the server has a resume by doing a quick HEAD-like fetch
+      const head = await fetch(serverUrl, { method: 'HEAD' });
+      const href = head.ok ? serverUrl : '/resume.pdf';
+
+      const link = document.createElement('a');
+      link.href = href;
+      link.download = 'Pratyush_Resume.pdf';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      // Network error — fall back to static
       const link = document.createElement('a');
       link.href = '/resume.pdf';
       link.download = 'Pratyush_Resume.pdf';
@@ -22,9 +41,9 @@ export function useResumeDownload() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
-      setIsLoading(false);
     }
+
+    setIsLoading(false);
   }, []);
 
   return { download, isLoading, error };

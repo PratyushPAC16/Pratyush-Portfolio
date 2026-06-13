@@ -11,6 +11,7 @@ import postRoutes from './routes/posts';
 import contactRoutes from './routes/contact';
 import authRoutes from './routes/auth';
 import analyticsRoutes from './routes/analytics';
+import resumeRoutes from './routes/resume';
 import Image from './models/Image';
 
 // Load environment variables
@@ -84,6 +85,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/resume', resumeRoutes);
 
 // Health Check / Root Endpoint
 app.get('/api/health', (req, res) => {

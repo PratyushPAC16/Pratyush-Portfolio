@@ -183,4 +183,31 @@ export function getDirectImageUrl(url: string | undefined): string | undefined {
   return url;
 }
 
+// ─── Resume ───────────────────────────────────────────────────────────────────
+
+export interface ResumeInfo {
+  filename: string;
+  uploadedAt: string;
+  uploadedBy?: string;
+}
+
+/** Upload a new resume PDF (replaces the current one). Protected. */
+export const uploadResume = (file: File): Promise<{ message: string; filename: string; uploadedAt: string }> => {
+  const formData = new FormData();
+  formData.append('resume', file);
+  return api.post('/api/resume', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }).then((r) => r.data);
+};
+
+/** Get metadata about the currently stored resume (no binary). Public. */
+export const getResumeInfo = (): Promise<ResumeInfo> =>
+  api.get<ResumeInfo>('/api/resume/info').then((r) => r.data);
+
+/** Build the direct download URL for the resume PDF. */
+export function getResumeDownloadUrl(): string {
+  const base = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
+  return `${base}/api/resume`;
+}
+
 export default api;

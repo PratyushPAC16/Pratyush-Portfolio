@@ -6,6 +6,7 @@ import AdminDashboard from '../components/admin/AdminDashboard';
 import AdminProjects from '../components/admin/AdminProjects';
 import AdminPosts from '../components/admin/AdminPosts';
 import AdminMessages from '../components/admin/AdminMessages';
+import AdminResume from '../components/admin/AdminResume';
 
 // ─── Login Page ───────────────────────────────────────────────────────────────
 
@@ -128,6 +129,7 @@ function AdminContent() {
         <Route path="projects" element={<AdminProjects />} />
         <Route path="posts" element={<AdminPosts />} />
         <Route path="messages" element={<AdminMessages />} />
+        <Route path="resume" element={<AdminResume />} />
         {/* Catch-all inside admin */}
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>
