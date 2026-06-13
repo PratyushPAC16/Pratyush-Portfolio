@@ -143,6 +143,26 @@ export const login = (email: string, password: string): Promise<LoginResponse> =
 export const getMe = (): Promise<AuthUser> =>
   api.get<AuthUser>('/api/auth/me').then((r) => r.data);
 
+export const changePassword = (
+  currentPassword: string,
+  newPassword: string
+): Promise<{ message: string }> =>
+  api
+    .put<{ message: string }>('/api/auth/change-password', { currentPassword, newPassword })
+    .then((r) => r.data);
+
+export const forgotPassword = (email: string): Promise<{ message: string }> =>
+  api.post<{ message: string }>('/api/auth/forgot-password', { email }).then((r) => r.data);
+
+export const resetPassword = (
+  email: string,
+  token: string,
+  newPassword: string
+): Promise<{ message: string }> =>
+  api
+    .post<{ message: string }>('/api/auth/reset-password', { email, token, newPassword })
+    .then((r) => r.data);
+
 // ─── Analytics ───────────────────────────────────────────────────────────────
 
 export interface DownloadStats {
